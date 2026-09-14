@@ -36,13 +36,14 @@
 
 ## Quality & Submission
 - [x] Clean `__pycache__` & `.pytest_cache` (removed, `.gitignore` covers)
-- [x] Git repo init — skipped (git not installed on this machine); placeholder: run `git init && git add . && git commit -m "feat: complete simulationproject 100%"` if needed
+- [x] Git repo init — done `git init` + `git add .` + `commit bde0d2d` on `master` (`2026-09-14`), user `FuelNet Student <student@college.edu>`, 39 files, `git status` clean — verified `C:\Program Files\GIT\cmd\git.exe` 2.55.0.windows.5
 - [x] Pytest suite `tests/test_api.py:88` 6 tests → log `outputs/test_log.txt:1` (36.7s, 6 passed) + re-eval appended R² 0.9926
-- [x] Live API verification `uvicorn.log:31` 11× `200 OK` (`/health` `/metrics` `/stats` `/predict` `/predict_batch` `/plots` `/css` `/js`)
-- [x] Submission ZIP `simulationproject_submission.zip` (55 files, 55.7 MB) containing data/models/outputs/src/simulation/tests/docs/scripts
-- [ ] Optional: Push to GitHub (requires git + GitHub repo URL)
-- [ ] Optional: Add GitHub Actions CI (pytest on push)
-- [ ] Optional: Deploy frontend to GitHub Pages (static export)
+- [x] Live API verification `uvicorn.log:136` 100+ `200 OK` incl. `GET /favicon.ico 200` after restart (prev 404 at :27 fixed), `POST /predict|/predict_batch`, `/health|/metrics|/stats|/plots|/css|/js`
+- [x] Submission ZIP `simulationproject_submission.zip` (55 files, 55.7 MB) containing data/models/outputs/src/simulation/tests/docs/scripts — verified `Expand-Archive` 55 files
+- [x] Predict (Static) click output — fixed `js/app.js:81` `predictStatus` banner + `css/style.css:90` `gaugePulse` + `api.py:198` favicon — tested `curl POST /predict → co2 214.14` + browser pulse
+- [ ] Push to GitHub — ready but needs remote URL: run `git remote add origin https://github.com/<you>/simulationproject.git && git branch -M main && git push -u origin main` (ask me for URL to push now)
+- [ ] Optional: Add GitHub Actions CI (pytest on push) — create `.github/workflows/ci.yml` (next)
+- [ ] Optional: Deploy frontend to GitHub Pages (static export) — `git subtree push --prefix simulation/frontend origin gh-pages`
 
 ## Quick Verify (copy-paste)
 ```bat

@@ -18,6 +18,4 @@ C:\Users\dnaga\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi
     from starlette.testclient import TestClient as TestClient  # noqa
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================== 6 passed, 1 warning in 36.70s ========================
-Eval on 300 samples: MSE 33.11 RMSE 5.75 MAE 4.32 R2 0.9926 MAPE 1.48%
-Plots saved to E:\simulationproject\outputs\plots
+======================== 6 passed, 1 warning in 21.05s ========================
