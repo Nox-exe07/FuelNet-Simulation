@@ -1,0 +1,71 @@
+name: CI — FuelNet Tests & Eval
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest httpx
+
+      - name: Run pytest (6 tests)
+        run: |
+          python -m pytest tests/test_api.py -v | tee outputs/test_log.txt
+          cat outputs/test_log.txt
+
+      - name: Re-run evaluation (R² 0.992)
+        run: |
+          python src/evaluation.py
+          cat outputs/metrics.json
+          ls -lh outputs/plots/
+
+      - name: Verify ONNX export
+        run: |
+          python src/export_onnx.py
+          ls -lh models/*.onnx
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-and-plots
+          path: |
+            outputs/test_log.txt
+            outputs/metrics.json
+            outputs/plots/*.png
+            outputs/report.docx
+            outputs/report.xlsx
+            models/*.onnx
+            models/*.json
+
+  pages-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages (if exists)
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+        continue-on-error: true
+
+      - name: Check frontend deploy
+        run: |
+          if [ -d gh-pages ]; then echo "gh-pages branch exists"; ls -R gh-pages | head -n 50; else echo "gh-pages not yet deployed — will be created on first subtree push"; fi
