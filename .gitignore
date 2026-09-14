@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.venv
+venv/
+ENV/
+env/
+
+# Model artifacts — keep meta but ignore large binaries optionally (uncomment to ignore)
+# models/*.pth
+# models/*.onnx
+# models/*.pkl
+
+# Outputs
+outputs/*.log
+# outputs/plots/*.png  # keep for demo
+
+# Logs
+uvicorn.log
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.suo
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Node (if frontend tooling added)
+node_modules/

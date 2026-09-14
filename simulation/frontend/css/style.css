@@ -1,0 +1,93 @@
+:root{
+  --bg:#0f172a;
+  --panel:#111827;
+  --card:#1f2937;
+  --border:#2b3449;
+  --accent:#22c55e;
+  --accent2:#38bdf8;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --low:#22c55e;
+  --mid:#f59e0b;
+  --high:#ef4444;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,system-ui,Arial;background:linear-gradient(180deg,#0f172a,#0b1222);color:var(--text)}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#0b1222;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.brand{display:flex;gap:14px;align-items:center}
+.logo{width:44px;height:44px;display:grid;place-items:center;background:linear-gradient(135deg,#22c55e,#0ea5e9);border-radius:10px;font-size:22px}
+.brand h1{margin:0;font-size:18px;letter-spacing:0.2px}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.top-metrics{display:flex;gap:8px;align-items:center}
+.pill{background:#1f2937;border:1px solid var(--border);padding:6px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+.pill.link{color:#38bdf8;text-decoration:none}
+.pill.link:hover{background:#1e293b}
+.layout{display:grid;grid-template-columns:320px 1fr 340px;gap:14px;padding:14px}
+.panel{background:rgba(17,24,39,0.9);border:1px solid var(--border);border-radius:14px;padding:14px;backdrop-filter: blur(6px)}
+.panel h2{margin:0 0 10px;font-size:15px}
+.panel h3{margin:14px 0 8px;font-size:14px}
+.form-grid{display:grid;gap:10px}
+.form-grid label{font-size:12px;color:var(--muted);display:grid;gap:4px}
+.form-grid select,.form-grid input[type="text"],.form-grid input[type="number"],.form-grid input{background:#0f172a;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 8px;font-size:13px}
+.form-grid input[type="range"]{padding:0}
+.hint{font-size:11px;color:#94a3b8;background:#0f172a;border:1px dashed var(--border);padding:8px;border-radius:8px}
+.gauges{display:grid;grid-template-columns:1fr 110px;gap:10px;margin-top:12px}
+.gauge{background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.gauge.co2 .g-value{font-size:28px;font-weight:800;color:#fff}
+.gauge.fc .g-value{font-size:20px;font-weight:700}
+.g-label{font-size:11px;color:var(--muted);letter-spacing:.6px;text-transform:uppercase}
+.g-unit{font-size:11px;color:var(--muted)}
+.g-bar{height:8px;background:#1f2937;border-radius:999px;overflow:hidden;margin-top:6px;border:1px solid var(--border)}
+.g-bar div{height:100%;width:0%;background:linear-gradient(90deg,var(--low),var(--mid),var(--high));transition:width .4s}
+.g-sub{font-size:11px;color:var(--muted);margin-top:6px}
+.class-list{max-height:160px;overflow:auto;font-size:12px;display:grid;gap:4px}
+.class-item{display:flex;justify-content:space-between;background:#0f172a;border:1px solid var(--border);padding:6px 8px;border-radius:8px}
+.actions{display:flex;gap:8px;margin-top:12px}
+.btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#1f2937;color:var(--text);cursor:pointer;font-size:13px}
+.btn.primary{background:linear-gradient(135deg,#22c55e,#16a34a);border-color:#16a34a;color:#052e0f;font-weight:700}
+.btn.ghost{background:transparent}
+.btn:hover{filter:brightness(1.08)}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tab{padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:#0f172a;color:var(--muted);cursor:pointer}
+.tab.active{background:#1f2937;color:var(--text);border-color:#38bdf8;box-shadow:0 0 0 2px rgba(56,189,248,.2)}
+.tabpane{display:none}
+.tabpane.active{display:block}
+.card{background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:12px}
+.muted{color:var(--muted);font-size:12px}
+.small{font-size:11px}
+.static-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.plot-img{width:100%;border:1px solid var(--border);border-radius:8px;background:#fff}
+.legend{font-size:11px;color:var(--muted);margin-top:6px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:middle}
+.dot.low{background:var(--low)} .dot.mid{background:var(--mid)} .dot.high{background:var(--high)}
+.metrics-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.metric{background:#1f2937;border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center}
+.metric b{font-size:15px}
+.metric span{font-size:11px;color:var(--muted)}
+.canvas-wrap{position:relative;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#0b1222,#0f172a);margin:10px 0}
+#road,#particles{width:100%;display:block}
+.overlay{position:absolute;left:0;top:0;pointer-events:none}
+.drive-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.speed-label{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);background:#0f172a;border:1px solid var(--border);padding:6px 8px;border-radius:999px}
+.speed-label input{width:120px}
+.live-stats{display:flex;gap:12px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.live-stats b{color:var(--text)}
+.road-legend{font-size:11px;color:var(--muted)}
+.steps{font-size:12px;color:var(--muted);padding-left:18px;display:grid;gap:6px}
+.steps b{color:var(--text)}
+.dataset-box{font-size:12px;background:#0f172a;border:1px solid var(--border);padding:8px;border-radius:8px;white-space:pre-wrap}
+.tier{display:grid;gap:6px}
+.tier-row{display:flex;gap:8px;align-items:center;font-size:12px;background:#0f172a;border:1px solid var(--border);padding:6px 8px;border-radius:8px}
+.tier-row span{width:14px;height:14px;border-radius:4px}
+.tier-row.low span{background:var(--low)}
+.tier-row.mid span{background:var(--mid)}
+.tier-row.high span{background:var(--high)}
+.code{font-size:11px;background:#0b1222;border:1px solid var(--border);padding:8px;border-radius:8px;overflow:auto}
+.outs{font-size:12px;padding-left:16px}
+.outs a{color:#38bdf8}
+.foot{display:flex;justify-content:space-between;padding:10px 14px;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:10px}
+@keyframes gaugePulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,0.7)}70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+.gauge.pulse{animation:gaugePulse 0.7s ease; border-color:#22c55e !important}
+.btn.loading{opacity:0.7; pointer-events:none}
+#predictStatus.ok{color:#22c55e} #predictStatus.err{color:#ef4444}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}.panel.info{order:3}}

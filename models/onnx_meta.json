@@ -1,0 +1,32 @@
+{
+  "in_features": 10,
+  "opset": 17,
+  "model": "FuelNet",
+  "note": "Output is residual; CO2 = residual + FC*23.7",
+  "feature_cols": [
+    "Year",
+    "MAKE",
+    "MODEL",
+    "VEHICLE_CLASS",
+    "ENGINE_SIZE",
+    "CYLINDERS",
+    "TRANSMISSION",
+    "FUEL",
+    "FUEL_CONSUMPTION",
+    "FC"
+  ],
+  "cat_cols": [
+    "MAKE",
+    "MODEL",
+    "VEHICLE_CLASS",
+    "TRANSMISSION",
+    "FUEL"
+  ],
+  "metrics": {
+    "mse": 32.82536697387695,
+    "rmse": 5.729342630169446,
+    "mae": 4.1668853759765625,
+    "r2": 0.9923193454742432,
+    "mape": 1.3915444612503052
+  }
+}

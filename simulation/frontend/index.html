@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fuel Consumption & CO₂ Emission — 2D Simulation</title>
+<link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" href="css/style.css"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">⛽</div>
+    <div>
+      <h1>Fuel Consumption & CO₂ Emission Predictor</h1>
+      <p>Deep Residual MLP (FuelNet 7.3M) — Physics prior FC×23.7 — 2D Real-Time Simulation</p>
+    </div>
+  </div>
+  <div class="top-metrics">
+    <div class="pill" id="apiStatus">API: checking…</div>
+    <div class="pill">R² 0.992 · RMSE 5.73 · MAPE 1.48%</div>
+    <a class="pill link" href="/docs" target="_blank">API Docs</a>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- Left: Controls -->
+  <aside class="panel controls">
+    <h2>Vehicle Configuration</h2>
+    <div class="form-grid">
+      <label>MAKE
+        <select id="make"><option>TOYOTA</option><option>HONDA</option><option>FORD</option><option>BMW</option><option>ACURA</option><option>AUDI</option><option>CHEVROLET</option><option>NISSAN</option><option>VOLKSWAGEN</option><option>HYUNDAI</option></select>
+      </label>
+      <label>MODEL <input id="model" value="COROLLA"/></label>
+      <label>VEHICLE CLASS
+        <select id="vclass"><option>COMPACT</option><option>SUV</option><option>MID-SIZE</option><option>FULL-SIZE</option><option>SUBCOMPACT</option><option>MINICOMPACT</option><option>TWO-SEATER</option><option>MINIVAN</option><option>STATION WAGON - SMALL</option><option>STATION WAGON - MID-SIZE</option><option>PICKUP TRUCK - STANDARD</option><option>PICKUP TRUCK - SMALL</option><option>VAN - CARGO</option><option>VAN - PASSENGER</option></select>
+      </label>
+      <label>TRANSMISSION
+        <select id="trans"><option>A4</option><option>M5</option><option>A5</option><option>AS5</option><option>M6</option><option>AV</option><option>AS4</option><option>A3</option><option>M4</option></select>
+      </label>
+      <label>FUEL
+        <select id="fuel"><option value="X">X — Regular Gasoline</option><option value="Z">Z — Premium Gasoline</option><option value="D">D — Diesel</option><option value="E">E — Ethanol</option><option value="N">N — Natural Gas</option></select>
+      </label>
+
+      <label>Year: <span id="yearVal">2000</span>
+        <input type="range" id="year" min="1998" max="2024" value="2000" step="1"/>
+      </label>
+
+      <label>ENGINE SIZE (L): <span id="engVal">2.0</span>
+        <input type="range" id="engine" min="0.8" max="8.0" value="2.0" step="0.1"/>
+      </label>
+
+      <label>CYLINDERS: <span id="cylVal">4</span>
+        <input type="range" id="cyl" min="3" max="12" value="4" step="1"/>
+      </label>
+
+      <label>FUEL CONSUMPTION (L/100km): <span id="fcVal">10.5</span>
+        <input type="range" id="fc" min="3" max="30" value="10.5" step="0.1"/>
+      </label>
+
+      <div class="hint">Tip: Fuel Consumption is the physics driver: CO₂ ≈ FC×23.7 + residual(ML). In Real-Time mode speed adds aero factor.</div>
+    </div>
+
+    <div class="gauges">
+      <div class="gauge co2">
+        <div class="g-label">CO₂ Emission</div>
+        <div class="g-value" id="co2Val">—</div>
+        <div class="g-unit">g / km</div>
+        <div class="g-bar"><div id="co2Bar"></div></div>
+        <div class="g-sub">Physics base <span id="physicsVal">—</span> · Residual <span id="residVal">—</span></div>
+      </div>
+      <div class="gauge fc">
+        <div class="g-label">Fuel</div>
+        <div class="g-value" id="fcGauge">10.5</div>
+        <div class="g-unit">L/100km</div>
+      </div>
+    </div>
+
+    <div class="class-compare" id="classCompare">
+      <h3>Per-Class Average (Dataset)</h3>
+      <div id="classList" class="class-list">loading…</div>
+    </div>
+
+    <div class="actions">
+      <button id="btnPredict" class="btn primary">🔮 Predict (Static)</button>
+      <button id="btnReset" class="btn ghost">Reset</button>
+    </div>
+    <div id="predictStatus" class="muted small" style="margin-top:8px;min-height:14px"></div>
+  </aside>
+
+  <!-- Center: Tabs -->
+  <main class="panel main">
+    <div class="tabs">
+      <button class="tab active" data-tab="static">📊 Static What-If</button>
+      <button class="tab" data-tab="realtime">🚗 Real-Time Drive</button>
+    </div>
+
+    <!-- Static Tab -->
+    <div id="tab-static" class="tabpane active">
+      <div class="card">
+        <h3>Static What-If Analysis</h3>
+        <p class="muted">Change sliders on the left and click Predict. Model recomputes instantly via <code>POST /predict</code>. Chart below shows scatter of true vs predicted for 300 samples.</p>
+        <div class="static-grid">
+          <div>
+            <canvas id="chartStatic" height="220"></canvas>
+            <div class="legend">
+              <span class="dot low"></span> Low &lt;200 · <span class="dot mid"></span> 200-300 · <span class="dot high"></span> &gt;300 g/km
+            </div>
+          </div>
+          <div>
+            <img id="scatterImg" src="/plots/scatter_true_vs_pred.png" alt="Scatter True vs Pred" class="plot-img" onerror="this.style.display='none'"/>
+            <img id="histImg" src="/plots/residual_hist.png" alt="Residual" class="plot-img" onerror="this.style.display='none'"/>
+          </div>
+        </div>
+        <div class="metrics-row" id="metricsRow"></div>
+        <div class="sensitivity">
+          <h4>Sensitivity (Engine Size sweep)</h4>
+          <canvas id="chartSensitivity" height="160"></canvas>
+          <p class="muted small">Holding cylinders & fuel constant, sweeping engine 1.0→6.0L.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real-Time Tab -->
+    <div id="tab-realtime" class="tabpane">
+      <div class="card">
+        <h3>Real-Time Driving Simulation</h3>
+        <p class="muted">Car drives on 2D road. Speed affects fuel/CO₂ via aero factor. Exhaust particles opacity ∝ CO₂. Live chart traces CO₂ over time.</p>
+        <div class="drive-controls">
+          <button id="btnDrive" class="btn primary">▶ Drive</button>
+          <button id="btnPause" class="btn">⏸ Pause</button>
+          <button id="btnClear" class="btn ghost">⟲ Reset</button>
+          <label class="speed-label">Speed: <span id="speedVal">60</span> km/h
+            <input type="range" id="speed" min="0" max="140" value="60" step="5"/>
+          </label>
+          <div class="live-stats">
+            <div>Distance: <b id="distVal">0.00</b> km</div>
+            <div>Fuel used: <b id="fuelUsed">0.00</b> L</div>
+            <div>Total CO₂: <b id="co2Total">0.00</b> kg</div>
+            <div>Time: <b id="timeVal">0</b> s</div>
+          </div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="road" width="900" height="260"></canvas>
+          <canvas id="particles" width="900" height="260" class="overlay"></canvas>
+        </div>
+        <canvas id="chartLive" height="160"></canvas>
+        <div class="road-legend">
+          <span class="dot low"></span> Low CO₂ · <span class="dot mid"></span> Medium · <span class="dot high"></span> High · Road markers every 100m
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Right: Info -->
+  <aside class="panel info">
+    <h3>How it Works</h3>
+    <ol class="steps">
+      <li><b>Physics prior:</b> Base = FC × 23.7 (stoichiometry: 2.31 kg CO₂ per L gasoline per 100km → 2310/100×?)</li>
+      <li><b>Residual MLP:</b> FuelNet predicts residual <code>CO2 − FC×23.7</code> — easier to learn, explains R² 0.992.</li>
+      <li><b>Pipeline:</b> LabelEncode categoricals → StandardScale → 10-dim → 512→1024 + 3×ResidualBlock → 1.</li>
+      <li><b>Real-time:</b> Canvas loop at 60fps, fuel integral Σ FC·dt, CO₂ integral, particle spawn ∝ CO₂/400.</li>
+    </ol>
+
+    <h3>Dataset</h3>
+    <div id="datasetInfo" class="dataset-box">loading stats…</div>
+
+    <h3>Legend — CO₂ Tier</h3>
+    <div class="tier">
+      <div class="tier-row low"><span></span> Eco &lt;200 g/km</div>
+      <div class="tier-row mid"><span></span> Medium 200–300</div>
+      <div class="tier-row high"><span></span> High &gt;300</div>
+    </div>
+
+    <h3>Run Locally</h3>
+    <pre class="code">py -3.13 -m pip install -r requirements.txt
+py -3.13 src/train.py --epochs 40
+py -3.13 -m uvicorn simulation.backend.api:app --host 127.0.0.1 --port 8000
+# open http://127.0.0.1:8000</pre>
+
+    <h3>Outputs</h3>
+    <ul class="outs">
+      <li><a href="/plots/scatter_true_vs_pred.png" target="_blank">scatter_true_vs_pred.png</a></li>
+      <li><a href="/plots/loss_curve.png" target="_blank">loss_curve.png</a></li>
+      <li><a href="/plots/residual_hist.png" target="_blank">residual_hist.png</a></li>
+      <li><a href="/metrics" target="_blank">/metrics (JSON)</a></li>
+      <li><a href="/stats" target="_blank">/stats (JSON)</a></li>
+    </ul>
+  </aside>
+</div>
+
+<footer class="foot">
+  <span>FuelNet — 7.37M params — Trained on 639 data rows (640 lines incl. header, Canada) — Demo for College Project · 2D Simulation · Localhost</span>
+  <span><a href="https://github.com/gundanagarjuna/Fuel-consumption-and--CO--Emission-Prediction-using-Machine-Learning" target="_blank">Original GitHub</a></span>
+</footer>
+
+<script src="js/app.js"></script>
+<script src="js/simulation2D.js"></script>
+<script src="js/charts.js"></script>
+</body>
+</html>
