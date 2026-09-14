@@ -1,6 +1,6 @@
 # TODO — Fuel Consumption & CO₂ Emission Project
 
-> Last updated: 2026-09-14 · Status: **100% Completed**
+> Last updated: 2026-09-14 08:15 UTC · Status: **100% Completed + CI & Pages Live**
 
 ## Legend
 - [x] done · [~] partially / optional · [ ] pending
@@ -41,9 +41,9 @@
 - [x] Live API verification `uvicorn.log:136` 100+ `200 OK` incl. `GET /favicon.ico 200` after restart (prev 404 at :27 fixed), `POST /predict|/predict_batch`, `/health|/metrics|/stats|/plots|/css|/js`
 - [x] Submission ZIP `simulationproject_submission.zip` (55 files, 55.7 MB) containing data/models/outputs/src/simulation/tests/docs/scripts — verified `Expand-Archive` 55 files
 - [x] Predict (Static) click output — fixed `js/app.js:81` `predictStatus` banner + `css/style.css:90` `gaugePulse` + `api.py:198` favicon — tested `curl POST /predict → co2 214.14` + browser pulse
-- [x] Push to GitHub — **DONE** `https://github.com/Nox-exe07/FuelNet-Simulation` public, pushed `main` 3 commits `bde0d2d` → `283dc0e` → `152badb` (merge keep local README), `git push -u origin main` 2026-09-14T08:03:27Z, verified `API GET /repos/Nox-exe07/FuelNet-Simulation` + `contents` 15 entries, remote `origin` now clean `https://github.com/Nox-exe07/FuelNet-Simulation.git` (token removed after push)
-- [ ] Optional: Add GitHub Actions CI (pytest on push) — create `.github/workflows/ci.yml` (next)
-- [ ] Optional: Deploy frontend to GitHub Pages (static export) — `git subtree push --prefix simulation/frontend origin gh-pages`
+- [x] Push to GitHub — **DONE** `https://github.com/Nox-exe07/FuelNet-Simulation` public, pushed `main` 4 commits `bde0d2d` → `283dc0e` → `152badb` → `125c82f` + `ee6cf4a` (CI), `git push -u origin main` 2026-09-14T08:03:27Z & 08:11:26Z, verified `API GET /repos/Nox-exe07/FuelNet-Simulation` + `contents` 15 entries, remote `origin` now clean `https://github.com/Nox-exe07/FuelNet-Simulation.git` (token removed after push)
+- [x] GitHub Actions CI — **DONE** `.github/workflows/ci.yml:71` `CI — FuelNet Tests & Eval` (`push`→`main/master`, `pull_request`, `workflow_dispatch`, `ubuntu-latest` `python 3.13` `cache pip` → `pip install -r requirements.txt` → `pytest 6 tests` → `evaluation R²` → `ONNX verify` → `upload-artifact` reports/plots) pushed `ee6cf4a` 2026-09-14T08:11:26Z, run `34821444785` `pages-check ✓ 22s`, `test in_progress` (torch install), view at `https://github.com/Nox-exe07/FuelNet-Simulation/actions/runs/34821444785`
+- [x] GitHub Pages — **DONE** `git subtree push --prefix simulation/frontend origin gh-pages` 6/6 → branch `gh-pages` `2a971878` (tree `af91139`), `GET /repos/Nox-exe07/FuelNet-Simulation/pages` → `{"status":"built","html_url":"https://nox-exe07.github.io/FuelNet-Simulation/","source":{"branch":"gh-pages","path":"/"}}`, `gh run pages-build-deployment 34821465276 ✓ 38s`, live at `https://nox-exe07.github.io/FuelNet-Simulation/` (fallback physics, API needs localhost `run.bat` for full FuelNet predictions)
 
 ## Quick Verify (copy-paste)
 ```bat
